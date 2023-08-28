@@ -7,6 +7,9 @@ export default defineNuxtConfig({
       apiBase: 'http://localhost:8000/api'
     }
   },
+  build: {
+    transpile: ['vue-toastification']
+  },
   app: {
     head: {
       htmlAttrs: {
