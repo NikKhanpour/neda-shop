@@ -48,14 +48,17 @@
 								</li>
 							</ul>
 							<div class="user_option">
-								<a class="cart_link position-relative" href="cart.html">
+								<NuxtLink class="cart_link position-relative" to="/cart">
 									<i class="bi bi-cart-fill text-white fs-5"></i>
-									<span
-										class="position-absolute top-0 translate-middle badge rounded-pill"
-									>
-										3
-									</span>
-								</a>
+									<ClientOnly>
+										<span
+											v-if="cartItemsCounter > 0"
+											class="position-absolute top-0 translate-middle badge rounded-pill"
+										>
+											{{ cartItemsCounter }}
+										</span>
+									</ClientOnly>
+								</NuxtLink>
 								<NuxtLink v-if="authUser" to="/profile" class="btn-auth">
 									پروفایل
 								</NuxtLink>
@@ -70,5 +73,8 @@
 	</div>
 </template>
 <script setup>
+import { useCartStore } from "../../store/cart";
+const cart = useCartStore();
+const cartItemsCounter = computed(() => cart.count);
 const { authUser } = useAuth();
 </script>
