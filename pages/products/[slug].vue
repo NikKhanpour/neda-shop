@@ -146,8 +146,8 @@ const cart = useCartStore();
 const quantity = ref(1);
 
 function addToCart(product) {
-	useCartStore.remove(product.id);
-	useCartStore.addToCart(product, quantity.value);
+	cart.remove(product.id);
+	cart.addToCart(product, quantity.value);
 }
 
 const route = useRoute();
