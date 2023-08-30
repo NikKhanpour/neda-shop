@@ -11,6 +11,6 @@
 <script setup>
 const showCheckOtp = ref(false);
 definePageMeta({
-	middleware: "guest",
+	middleware: "logged-in",
 });
 </script>

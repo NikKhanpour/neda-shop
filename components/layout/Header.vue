@@ -56,7 +56,7 @@
 										3
 									</span>
 								</a>
-								<NuxtLink v-if="authUser" to="/login" class="btn-auth">
+								<NuxtLink v-if="authUser" to="/profile" class="btn-auth">
 									پروفایل
 								</NuxtLink>
 								<NuxtLink v-else to="/login" class="btn-auth"> ورود </NuxtLink>
