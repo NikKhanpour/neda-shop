@@ -2,14 +2,20 @@
 	<div class="box">
 		<div>
 			<div class="img-box">
-				<img
-					src="/images/preloader.png"
-					v-img="props.product.primary_image"
-					alt=""
-				/>
+				<NuxtLink :to="`/products/${product.slug}`">
+					<img
+						src="/images/preloader.png"
+						v-img="props.product.primary_image"
+						alt=""
+					/>
+				</NuxtLink>
 			</div>
 			<div class="detail-box">
-				<h5>{{ props.product.name }}</h5>
+				<h5>
+					<NuxtLink :to="`/products/${product.slug}`">{{
+						props.product.name
+					}}</NuxtLink>
+				</h5>
 				<p>
 					{{ props.product.description }}
 				</p>
