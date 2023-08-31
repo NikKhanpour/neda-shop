@@ -93,18 +93,7 @@
 							</div>
 						</div>
 						<div class="row mt-4">
-							<div class="col-12 col-md-6">
-								<div class="input-group mb-3">
-									<input
-										type="text"
-										class="form-control"
-										placeholder="کد تخفیف"
-									/>
-									<button class="input-group-text" id="basic-addon2">
-										اعمال کد تخفیف
-									</button>
-								</div>
-							</div>
+							<CartCoupon :coupon="coupon" />
 							<div
 								class="col-12 col-md-6 d-flex justify-content-end align-items-baseline"
 							>
@@ -130,22 +119,39 @@
 												class="list-group-item d-flex justify-content-between"
 											>
 												<div>مجموع قیمت :</div>
-												<div>535,000 تومان</div>
+												<div>{{ numberFormat(cart.totalAmount) }} تومان</div>
 											</li>
 											<li
 												class="list-group-item d-flex justify-content-between"
 											>
 												<div>
 													تخفیف :
-													<span class="text-danger ms-1">10%</span>
+													<span class="text-danger ms-1"
+														>{{ coupon.percent }}%</span
+													>
 												</div>
-												<div class="text-danger">53,500 تومان</div>
+												<div class="text-danger">
+													{{
+														numberFormat(
+															(cart.totalAmount * coupon.percent) / 100
+														)
+													}}
+													تومان
+												</div>
 											</li>
 											<li
 												class="list-group-item d-flex justify-content-between"
 											>
 												<div>قیمت پرداختی :</div>
-												<div>481,500 تومان</div>
+												<div>
+													{{
+														numberFormat(
+															cart.totalAmount -
+																(cart.totalAmount * coupon.percent) / 100
+														)
+													}}
+													تومان
+												</div>
 											</li>
 										</ul>
 										<button class="user_option btn-auth mt-4">پرداخت</button>
@@ -191,6 +197,10 @@ const toast = useToast();
 const cart = useCartStore();
 const cartItemsCounter = computed(() => cart.count);
 const items = computed(() => cart.items);
+const coupon = reactive({
+	code: "",
+	percent: 0,
+});
 
 function removeItem(id) {
 	cart.remove(id);
