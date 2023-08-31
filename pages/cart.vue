@@ -21,82 +21,65 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
+											<tr v-for="item in items" :key="item.id">
 												<th>
 													<img src="./images/b1.jpg" width="100" alt="" />
+													<img
+														src="/images/preloader.png"
+														width="100"
+														height="60"
+														v-img="item.primary_image"
+													/>
 												</th>
-												<td class="fw-bold">برگر گوشت ذغالی</td>
+												<td class="fw-bold">{{ item.name }}</td>
 												<td>
-													<span>45,000</span>
-													<span class="ms-1">تومان</span>
-												</td>
-												<td>
-													<div class="input-counter">
-														<span class="plus-btn"> + </span>
-														<div class="input-number">2</div>
-														<span class="minus-btn"> - </span>
+													<span v-if="item.is_sale">
+														{{ numberFormat(item.sale_price) }}
+													</span>
+													<span v-else> {{ numberFormat(item.price) }}</span>
+													<span class="ms-1"> تومان</span>
+													<div v-if="item.sale_price" class="text-danger">
+														{{ salePercent(item.price, item.sale_price) }}%
+														تخفیف
 													</div>
 												</td>
 												<td>
-													<span>90,000</span>
-													<span class="ms-1">تومان</span>
+													<div class="input-counter">
+														<span
+															class="plus-btn"
+															@click="
+																() =>
+																	item.quantity > item.qty &&
+																	cart.increment(item.id)
+															"
+														>
+															+
+														</span>
+														<div class="input-number">{{ item.qty }}</div>
+														<span
+															class="minus-btn"
+															@click="
+																() => item.qty > 1 && cart.decrement(item.id)
+															"
+														>
+															-
+														</span>
+													</div>
 												</td>
-												<td>
-													<i
-														class="bi bi-x text-danger fw-bold fs-4 cursor-pointer"
-													></i>
-												</td>
-											</tr>
-											<tr>
-												<th>
-													<img src="./images/p1.jpg" width="100" alt="" />
-												</th>
-												<td class="fw-bold">پیتزا پپرونی</td>
 												<td>
 													<div>
-														<del>135,000</del>
-														115,000 تومان
+														<span v-if="item.is_sale">{{
+															numberFormat(item.sale_price * item.qty)
+														}}</span>
+														<span v-else>{{
+															numberFormat(item.price * item.qty)
+														}}</span>
 													</div>
-													<div class="text-danger">10% تخفیف</div>
-												</td>
-												<td>
-													<div class="input-counter">
-														<span class="plus-btn"> + </span>
-														<div class="input-number">1</div>
-														<span class="minus-btn"> - </span>
-													</div>
-												</td>
-												<td>
-													<span>115,000</span>
 													<span class="ms-1">تومان</span>
 												</td>
 												<td>
 													<i
-														class="bi bi-x text-danger fw-bold fs-4 cursor-pointer"
-													></i>
-												</td>
-											</tr>
-											<tr>
-												<th>
-													<img src="./images/p3.jpg" width="100" alt="" />
-												</th>
-												<td class="fw-bold">پیتزا رست بیف</td>
-												<td>
-													<div>165,000 تومان</div>
-												</td>
-												<td>
-													<div class="input-counter">
-														<span class="plus-btn"> + </span>
-														<div class="input-number">2</div>
-														<span class="minus-btn"> - </span>
-													</div>
-												</td>
-												<td>
-													<span>330,000</span>
-													<span class="ms-1">تومان</span>
-												</td>
-												<td>
-													<i
+														@click="removeItem(item.id)"
 														class="bi bi-x text-danger fw-bold fs-4 cursor-pointer"
 													></i>
 												</td>
@@ -104,7 +87,9 @@
 										</tbody>
 									</table>
 								</div>
-								<button class="btn btn-primary mb-4">پاک کردن سبد خرید</button>
+								<button @click="cart.clear()" class="btn btn-primary mb-4">
+									پاک کردن سبد خرید
+								</button>
 							</div>
 						</div>
 						<div class="row mt-4">
@@ -200,9 +185,24 @@
 </template>
 <script setup>
 import { useCartStore } from "../store/cart";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 const cart = useCartStore();
 const cartItemsCounter = computed(() => cart.count);
+const items = computed(() => cart.items);
+
+function removeItem(id) {
+	cart.remove(id);
+	toast.warning("آیتم از سبد خرید حذف شد");
+}
 </script>
+
+
+
+
+
+
 <style scoped>
 .spinner {
 	width: 56px;

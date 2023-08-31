@@ -8,8 +8,11 @@ export const useCartStore = defineStore('cart', {
         }
     },
     getters: {
-        count() {
-            return this.cart.length
+        count(state) {
+            return state.cart.length
+        },
+        items(state) {
+            return state.cart
         }
     },
     actions: {
@@ -19,7 +22,24 @@ export const useCartStore = defineStore('cart', {
         },
         remove(id) {
             this.cart = this.cart.filter(p => p.id != id)
-        }
+        },
+        increment(id) {
+            const item = this.cart.find(p => p.id == id);
+            if (item) {
+                item.qty++
+            }
+        },
+        decrement(id) {
+            const item = this.cart.find(p => p.id == id);
+            if (item) {
+                if (item.qty > 1) {
+                    item.qty--
+                }
+            }
+        },
+        clear() {
+            this.cart = []
+        },
     },
     persist: {
         storage: persistedState.localStorage,
