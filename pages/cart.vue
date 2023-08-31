@@ -95,7 +95,6 @@
 						<div class="row mt-4">
 							<CartCoupon :coupon="coupon" />
 							<CartAddress @set-address-id="(id) => (addressId = id)" />
-							{{ addressId }}
 						</div>
 						<div class="row justify-content-center mt-5">
 							<div class="col-12 col-md-6">
@@ -142,7 +141,11 @@
 												</div>
 											</li>
 										</ul>
-										<button class="user_option btn-auth mt-4">پرداخت</button>
+										<CartPayment
+											:cart="items"
+											:coupon="coupon"
+											:address-id="addressId"
+										/>
 									</div>
 								</div>
 							</div>
