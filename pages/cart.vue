@@ -94,20 +94,8 @@
 						</div>
 						<div class="row mt-4">
 							<CartCoupon :coupon="coupon" />
-							<div
-								class="col-12 col-md-6 d-flex justify-content-end align-items-baseline"
-							>
-								<div>انتخاب آدرس</div>
-								<select
-									style="width: 200px"
-									class="form-select ms-3"
-									aria-label="Default select example"
-								>
-									<option selected>منزل</option>
-									<option value="1">محل کار</option>
-								</select>
-								<a href="profile.html" class="btn btn-primary"> ایجاد آدرس </a>
-							</div>
+							<CartAddress @set-address-id="(id) => (addressId = id)" />
+							{{ addressId }}
 						</div>
 						<div class="row justify-content-center mt-5">
 							<div class="col-12 col-md-6">
@@ -197,6 +185,8 @@ const toast = useToast();
 const cart = useCartStore();
 const cartItemsCounter = computed(() => cart.count);
 const items = computed(() => cart.items);
+const addressId = ref(1);
+console.log(addressId.value);
 const coupon = reactive({
 	code: "",
 	percent: 0,
