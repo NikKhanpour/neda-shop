@@ -174,6 +174,8 @@
 	</section>
 </template>
 <script setup>
+import { watchEffect } from "vue";
+
 const router = useRouter();
 const route = useRoute();
 const search = ref("");
@@ -188,7 +190,7 @@ const { data, refresh, pending } = await useFetch(() => `${apiBase}/menu`, {
 	query,
 });
 
-watch(route, () => {
+watchEffect(() => {
 	console.log(route, "log from watch");
 	if (Object.keys(route.query).length == 0) {
 		query.value = {};

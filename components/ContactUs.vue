@@ -4,7 +4,7 @@
 			<div class="heading_container">
 				<h2>تماس با ما</h2>
 			</div>
-			<div class="row">
+			<div class="row align-items-center">
 				<div class="col-md-6">
 					<div class="form_container">
 						<div
@@ -68,8 +68,8 @@
 						</form>
 					</div>
 				</div>
-				<div class="col-md-6">
-					<div class="map_container">
+				<div class="col-md-6 mb-5">
+					<div class="map_container mb-5">
 						<div id="map" style="height: 345px"></div>
 					</div>
 				</div>

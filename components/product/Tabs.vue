@@ -31,14 +31,8 @@
 				</Tabs>
 			</div>
 
-			<ul class="filters_menu">
-				<li class="active">برگر</li>
-				<li>پیتزا</li>
-				<li>پیش غذا و سالاد</li>
-			</ul>
-
 			<div class="btn-box">
-				<a href=""> مشاهده بیشتر </a>
+				<NuxtLink to="/menu"> مشاهده بیشتر </NuxtLink>
 			</div>
 		</div>
 	</section>

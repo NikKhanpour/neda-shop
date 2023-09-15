@@ -1,9 +1,17 @@
 <template>
 	<ClientOnly>
-		<section
-			v-if="cartItemsCounter > 0"
-			class="single_page_section layout_padding"
-		>
+		<div v-if="cartItemsCounter == 0" class="cart-empty">
+			<div class="text-center">
+				<div>
+					<i class="bi bi-basket-fill" style="font-size: 80px"></i>
+				</div>
+				<h4 class="text-bold">سبد خرید شما خالی میباشد</h4>
+				<NuxtLink to="/menu" class="btn btn-outline-dark mt-3"
+					>مشاهده محصولات</NuxtLink
+				>
+			</div>
+		</div>
+		<section v-else class="single_page_section layout_padding">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-10 offset-md-1">
@@ -154,17 +162,6 @@
 				</div>
 			</div>
 		</section>
-		<div v-else class="cart-empty">
-			<div class="text-center">
-				<div>
-					<i class="bi bi-basket-fill" style="font-size: 80px"></i>
-				</div>
-				<h4 class="text-bold">سبد خرید شما خالی میباشد</h4>
-				<NuxtLink to="/menu" class="btn btn-outline-dark mt-3"
-					>مشاهده محصولات</NuxtLink
-				>
-			</div>
-		</div>
 		<template #fallback>
 			<div class="d-flex justify-content-center">
 				<div
@@ -199,6 +196,9 @@ function removeItem(id) {
 	cart.remove(id);
 	toast.warning("آیتم از سبد خرید حذف شد");
 }
+definePageMeta({
+	middleware: "logged-out",
+});
 </script>
 
 

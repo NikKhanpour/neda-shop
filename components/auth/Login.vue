@@ -6,23 +6,11 @@
 					<form @submit.prevent="login">
 						<div class="mb-3">
 							<label for="cellphone" class="form-label">شماره موبایل</label>
-							<input
-								v-model="cellphone"
-								type="text"
-								class="form-control"
-								id="cellphone"
-							/>
+							<input v-model="cellphone" type="text" class="form-control" id="cellphone" />
 						</div>
-						<button
-							:disabled="loading"
-							type="submit"
-							class="btn btn-primary btn-auth"
-						>
+						<button :disabled="loading" type="submit" class="btn btn-primary btn-auth">
 							ورود
-							<div
-								v-if="loading"
-								class="spinner-border spinner-border-sm ms-2"
-							></div>
+							<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
 						</button>
 					</form>
 				</div>
@@ -48,6 +36,7 @@ async function login() {
 	}
 
 	try {
+		loading.value = true
 		const data = await $fetch("/api/auth/login", {
 			method: "POST",
 			body: { cellphone: cellphone.value },
@@ -56,6 +45,8 @@ async function login() {
 		emit("showCheckOtpForm");
 	} catch (error) {
 		return error;
+	} finally {
+		loading.value = false
 	}
 }
 </script>

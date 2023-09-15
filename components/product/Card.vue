@@ -12,9 +12,9 @@
 			</div>
 			<div class="detail-box">
 				<h5>
-					<NuxtLink :to="`/products/${product.slug}`">{{
-						props.product.name
-					}}</NuxtLink>
+					<NuxtLink :to="`/products/${product.slug}`">
+						{{ props.product.name }}
+					</NuxtLink>
 				</h5>
 				<p>
 					{{ props.product.description }}
