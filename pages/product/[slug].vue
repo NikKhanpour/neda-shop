@@ -6,38 +6,35 @@
 					<div class="row gy-5">
 						<div class="col-sm-12 col-lg-6">
 							<h3 class="fw-bold mb-4">{{ product.data.name }}</h3>
-							<h5 v-if="product.data.is_sale" class="mb-3">
-								<del>{{ numberFormat(product.data.price) }}</del>
-								{{ numberFormat(product.data.sale_price) }} تومان
-								<div class="text-danger fs-6">
-									{{
-										salePercent(product.data.price, product.data.sale_price)
-									}}% تخفیف
+							<h5 class="mb-3">
+								<div v-if="product.data.is_sale">
+									<del>{{ product.data.price }}</del>
+									{{ product.data.sale_price }} تومان
+									<div class="text-danger fs-6">
+										{{
+											salePercent(product.data.price, product.data.sale_price)
+										}}% تخفیف
+									</div>
 								</div>
+								<div v-else>{{ numberFormat(product.data.price) }}تومان</div>
 							</h5>
-							<h5 v-else>{{ numberFormat(product.data.price) }}</h5>
 							<p>
 								{{ product.data.description }}
 							</p>
 
 							<div class="mt-5 d-flex">
-								<button @click="addToCart(product.data)" class="btn-add">
+								<button class="btn-add" @click="addToCart(product.data)">
 									افزودن به سبد خرید
 								</button>
 								<div class="input-counter ms-4">
 									<span
-										@click="
-											() => quantity < product.data.quantity && quantity++
-										"
 										class="plus-btn"
+										@click="quantity <= product.data.quantity && quantity++"
 									>
 										+
 									</span>
 									<div class="input-number">{{ quantity }}</div>
-									<span
-										@click="() => quantity > 1 && quantity--"
-										class="minus-btn"
-									>
+									<span class="minus-btn" @click="quantity > 1 && quantity--">
 										-
 									</span>
 								</div>
@@ -53,11 +50,11 @@
 									<button
 										type="button"
 										data-bs-target="#carouselExampleIndicators"
+										data-bs-slide-to="0"
 										class="active"
 										aria-current="true"
-										data-bs-slide-to="0"
+										aria-label="Slide 1"
 									></button>
-
 									<button
 										v-for="(image, index) in product.data.images"
 										:key="index"
@@ -66,31 +63,23 @@
 										:data-bs-slide-to="`${index + 1}`"
 									></button>
 								</div>
-
 								<div class="carousel-inner">
 									<div class="carousel-item active">
 										<img
-											class="d-block w-100"
-											width="464"
-											height="309"
 											src="/images/preloader.png"
+											class="d-block w-100"
 											v-img="product.data.primary_image"
-											alt=""
 										/>
 									</div>
-
 									<div
-										v-for="(image, index) in product.data.images"
-										:key="index"
+										v-for="image in product.data.images"
+										:key="image.id"
 										class="carousel-item"
 									>
 										<img
-											class="d-block w-100"
-											width="464"
-											height="309"
 											src="/images/preloader.png"
+											class="d-block w-100"
 											v-img="image.image"
-											alt=""
 										/>
 									</div>
 								</div>
@@ -125,6 +114,7 @@
 			</div>
 		</div>
 	</section>
+	<!-- end food section -->
 	<hr />
 	<section class="food_section my-5">
 		<div class="container">
@@ -141,19 +131,19 @@
 	</section>
 </template>
 <script setup>
-import { useCartStore } from "../../store/cart";
-const cart = useCartStore();
+import { cartStore } from "../../store/cart";
+
+const {
+	public: { apiBase },
+} = useRuntimeConfig();
+const route = useRoute();
 const quantity = ref(1);
+const cart = cartStore();
 
 function addToCart(product) {
 	cart.remove(product.id);
 	cart.addToCart(product, quantity.value);
 }
-
-const route = useRoute();
-const {
-	public: { apiBase },
-} = useRuntimeConfig();
 
 const { data: product } = await useFetch(
 	`${apiBase}/products/${route.params.slug}`

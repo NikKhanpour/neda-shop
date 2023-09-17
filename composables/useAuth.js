@@ -1,4 +1,4 @@
 export const useAuth = () => {
-    const authUser = useState('auth_user', () => null)
+    const authUser = useState('authUser', () => null)
     return { authUser }
 }

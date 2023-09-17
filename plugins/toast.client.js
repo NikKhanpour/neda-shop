@@ -1,8 +1,8 @@
-import Toast from "vue-toastification";
-import "vue-toastification/dist/index.css";
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 export default defineNuxtPlugin(nuxtApp => {
     nuxtApp.vueApp.use(Toast, {
-        position: "top-right",
+        position: "top-center",
         timeout: 4000,
         closeOnClick: true,
         pauseOnFocusLoss: true,
@@ -11,11 +11,11 @@ export default defineNuxtPlugin(nuxtApp => {
         draggablePercent: 0.6,
         showCloseButtonOnHover: false,
         hideProgressBar: true,
-        closeButton: false,
+        closeButton: "",
         icon: true,
         rtl: true,
         transition: "Vue-Toastification__fade",
         maxToasts: 20,
         newestOnTop: true
-    });
+    })
 })

@@ -1,33 +1,30 @@
 <template>
 	<div class="box">
 		<div>
-			<div class="img-box">
-				<NuxtLink :to="`/products/${product.slug}`">
+			<NuxtLink :to="`/product/${props.product.slug}`">
+				<div class="img-box">
 					<img
 						src="/images/preloader.png"
 						v-img="props.product.primary_image"
-						alt=""
 					/>
-				</NuxtLink>
-			</div>
+				</div>
+			</NuxtLink>
 			<div class="detail-box">
-				<h5>
-					<NuxtLink :to="`/products/${product.slug}`">
-						{{ props.product.name }}
-					</NuxtLink>
-				</h5>
-				<p>
-					{{ props.product.description }}
-				</p>
+				<NuxtLink :to="`/product/${props.product.slug}`"
+					><h5>{{ props.product.name }}</h5>
+					<p>
+						{{ props.product.description }}
+					</p>
+				</NuxtLink>
 				<div class="options">
-					<h6 v-if="props.product.is_sale">
-						<del>{{ numberFormat(props.product.price) }}</del>
-						{{ numberFormat(props.product.sale_price) }}
-						<span>تومان</span>
-					</h6>
-					<h6 v-else>
-						{{ numberFormat(props.product.price) }}
-						<span>تومان</span>
+					<h6>
+						<div v-if="props.product.is_sale">
+							<del>{{ numberFormat(props.product.price) }}</del>
+							<span class="text-danger"
+								>{{ numberFormat(props.product.sale_price) }} تومان</span
+							>
+						</div>
+						<div v-else>{{ numberFormat(props.product.price) }} تومان</div>
 					</h6>
 					<button @click="addToCart(props.product)">
 						<i class="bi bi-cart-fill text-white fs-5"></i>
@@ -38,9 +35,10 @@
 	</div>
 </template>
 <script setup>
-import { useCartStore } from "../../store/cart";
-const cart = useCartStore();
+import { cartStore } from "~/store/cart";
+
 const props = defineProps(["product"]);
+const cart = cartStore();
 function addToCart(product) {
 	cart.remove(product.id);
 	cart.addToCart(product, 1);

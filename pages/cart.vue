@@ -1,6 +1,14 @@
 <template>
 	<ClientOnly>
-		<div v-if="cartItemsCounter == 0" class="cart-empty">
+		<template #fallback>
+			<div
+				class="d-flex justify-content-center"
+				style="margin-top: 200px; margin-bottom: 200px"
+			>
+				<div class="spinner-border" style="width: 5rem; height: 5rem"></div>
+			</div>
+		</template>
+		<div v-if="itemsCount == 0" class="cart-empty">
 			<div class="text-center">
 				<div>
 					<i class="bi bi-basket-fill" style="font-size: 80px"></i>
@@ -11,219 +19,176 @@
 				>
 			</div>
 		</div>
-		<section v-else class="single_page_section layout_padding">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-10 offset-md-1">
-						<div class="row gy-5">
-							<div class="col-12">
-								<div class="table-responsive">
-									<table class="table align-middle">
-										<thead>
-											<tr>
-												<th>محصول</th>
-												<th>نام</th>
-												<th>قیمت</th>
-												<th>تعداد</th>
-												<th>قیمت کل</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr v-for="item in items" :key="item.id">
-												<th>
-													<img src="./images/b1.jpg" width="100" alt="" />
-													<img
-														src="/images/preloader.png"
-														width="100"
-														height="60"
-														v-img="item.primary_image"
-													/>
-												</th>
-												<td class="fw-bold">{{ item.name }}</td>
-												<td>
-													<span v-if="item.is_sale">
-														{{ numberFormat(item.sale_price) }}
-													</span>
-													<span v-else> {{ numberFormat(item.price) }}</span>
-													<span class="ms-1"> تومان</span>
-													<div v-if="item.sale_price" class="text-danger">
-														{{ salePercent(item.price, item.sale_price) }}%
-														تخفیف
-													</div>
-												</td>
-												<td>
-													<div class="input-counter">
-														<span
-															class="plus-btn"
-															@click="
-																() =>
-																	item.quantity > item.qty &&
-																	cart.increment(item.id)
-															"
+		<template v-else>
+			<section class="single_page_section layout_padding">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-10 offset-md-1">
+							<div class="row gy-5">
+								<div class="col-12">
+									<div class="table-responsive">
+										<table class="table align-middle">
+											<thead>
+												<tr>
+													<th>محصول</th>
+													<th>نام</th>
+													<th>قیمت</th>
+													<th>تعداد</th>
+													<th>قیمت کل</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="item in items" :key="item.id">
+													<th>
+														<img
+															src="/images/preloader.png"
+															v-img="item.primary_image"
+															width="100"
+														/>
+													</th>
+													<td class="fw-bold">{{ item.name }}</td>
+													<td>
+														<span v-if="item.is_sale"
+															>{{ numberFormat(item.sale_price) }} تومان</span
 														>
-															+
-														</span>
-														<div class="input-number">{{ item.qty }}</div>
-														<span
-															class="minus-btn"
-															@click="
-																() => item.qty > 1 && cart.decrement(item.id)
-															"
+														<span v-else
+															>{{ numberFormat(item.price) }} تومان</span
 														>
-															-
-														</span>
-													</div>
-												</td>
-												<td>
-													<div>
+														<span v-if="item.is_sale" class="text-danger"
+															>{{
+																salePercent(item.price, item.sale_price)
+															}}%</span
+														>
+													</td>
+													<td>
+														<div class="input-counter">
+															<span
+																class="plus-btn"
+																@click="
+																	item.qty <= item.quantity &&
+																		cart.increment(item.id)
+																"
+															>
+																+
+															</span>
+															<div class="input-number">{{ item.qty }}</div>
+															<span
+																class="minus-btn"
+																@click="item.qty > 1 && cart.decrement(item.id)"
+															>
+																-
+															</span>
+														</div>
+													</td>
+													<td>
 														<span v-if="item.is_sale">{{
 															numberFormat(item.sale_price * item.qty)
 														}}</span>
 														<span v-else>{{
 															numberFormat(item.price * item.qty)
 														}}</span>
-													</div>
-													<span class="ms-1">تومان</span>
-												</td>
-												<td>
-													<i
-														@click="removeItem(item.id)"
-														class="bi bi-x text-danger fw-bold fs-4 cursor-pointer"
-													></i>
-												</td>
-											</tr>
-										</tbody>
-									</table>
+														<span class="ms-1">تومان</span>
+													</td>
+													<td>
+														<i
+															@click="removeItem(item.id)"
+															class="bi bi-x text-danger fw-bold fs-4 cursor-pointer"
+														></i>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<button @click="cart.clear()" class="btn btn-primary mb-4">
+										پاک کردن سبد خرید
+									</button>
 								</div>
-								<button @click="cart.clear()" class="btn btn-primary mb-4">
-									پاک کردن سبد خرید
-								</button>
 							</div>
-						</div>
-						<div class="row mt-4">
-							<CartCoupon :coupon="coupon" />
-							<CartAddress @set-address-id="(id) => (addressId = id)" />
-						</div>
-						<div class="row justify-content-center mt-5">
-							<div class="col-12 col-md-6">
-								<div class="card">
-									<div class="card-body p-4">
-										<h5 class="card-title fw-bold">مجموع سبد خرید</h5>
-										<ul class="list-group mt-4">
-											<li
-												class="list-group-item d-flex justify-content-between"
-											>
-												<div>مجموع قیمت :</div>
-												<div>{{ numberFormat(cart.totalAmount) }} تومان</div>
-											</li>
-											<li
-												class="list-group-item d-flex justify-content-between"
-											>
-												<div>
-													تخفیف :
-													<span class="text-danger ms-1"
-														>{{ coupon.percent }}%</span
-													>
-												</div>
-												<div class="text-danger">
-													{{
-														numberFormat(
-															(cart.totalAmount * coupon.percent) / 100
-														)
-													}}
-													تومان
-												</div>
-											</li>
-											<li
-												class="list-group-item d-flex justify-content-between"
-											>
-												<div>قیمت پرداختی :</div>
-												<div>
-													{{
-														numberFormat(
-															cart.totalAmount -
-																(cart.totalAmount * coupon.percent) / 100
-														)
-													}}
-													تومان
-												</div>
-											</li>
-										</ul>
-										<CartPayment
-											:cart="items"
-											:coupon="coupon"
-											:address-id="addressId"
-										/>
+							<div class="row mt-4">
+								<div class="col-12 col-md-6">
+									<cartCoupon :coupon="coupon" />
+								</div>
+								<div
+									class="col-12 col-md-6 d-flex justify-content-end align-items-baseline"
+								>
+									<cartAddress @set-address-id="(id) => (addressId = id)" />
+								</div>
+							</div>
+							<div class="row justify-content-center mt-5">
+								<div class="col-12 col-md-6">
+									<div class="card">
+										<div class="card-body p-4">
+											<h5 class="card-title fw-bold">مجموع سبد خرید</h5>
+											<ul class="list-group mt-4">
+												<li
+													class="list-group-item d-flex justify-content-between"
+												>
+													<div>مجموع قیمت :</div>
+													<div>{{ numberFormat(total) }} تومان</div>
+												</li>
+												<li
+													class="list-group-item d-flex justify-content-between"
+												>
+													<div>
+														تخفیف :
+														<span v-if="coupon.percent" class="text-danger ms-1"
+															>{{ coupon.percent }}%</span
+														>
+													</div>
+													<div class="text-danger">
+														{{ numberFormat((total * coupon.percent) / 100) }}
+														تومان
+													</div>
+												</li>
+												<li
+													class="list-group-item d-flex justify-content-between"
+												>
+													<div>قیمت پرداختی :</div>
+													<div v-if="coupon.percent">
+														{{
+															numberFormat(
+																total - (total * coupon.percent) / 100
+															)
+														}}
+														تومان
+													</div>
+													<div v-else>{{ numberFormat(total) }} تومان</div>
+												</li>
+											</ul>
+											<CartPayment
+												:cart="items"
+												:address-id="addressId"
+												:coupon="coupon.code"
+											/>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</section>
-		<template #fallback>
-			<div class="d-flex justify-content-center">
-				<div
-					class="spinner"
-					style="
-						margin-top: 250px;
-						margin-bottom: 250px;
-						width: 5rem;
-						height: 5rem;
-					"
-				></div>
-			</div>
+			</section>
 		</template>
 	</ClientOnly>
 </template>
 <script setup>
-import { useCartStore } from "../store/cart";
 import { useToast } from "vue-toastification";
+import { cartStore } from "../store/cart";
 
 const toast = useToast();
-const cart = useCartStore();
-const cartItemsCounter = computed(() => cart.count);
+const cart = cartStore();
 const items = computed(() => cart.items);
-const addressId = ref(1);
+const itemsCount = computed(() => cart.itemsCount);
+const total = computed(() => cart.totalAmount);
+const addressId = ref(null);
 console.log(addressId.value);
 const coupon = reactive({
 	code: "",
-	percent: 0,
+	percent: "",
 });
 
 function removeItem(id) {
 	cart.remove(id);
 	toast.warning("آیتم از سبد خرید حذف شد");
 }
-definePageMeta({
-	middleware: "logged-out",
-});
 </script>
-
-
-
-
-
-
-<style scoped>
-.spinner {
-	width: 56px;
-	height: 56px;
-	border-radius: 50%;
-	background: #ffbe33;
-	-webkit-mask: radial-gradient(
-		circle closest-side at 50% 40%,
-		#0000 94%,
-		#000
-	);
-	transform-origin: 50% 40%;
-	animation: spinner-pl92zb 1s infinite linear;
-}
-
-@keyframes spinner-pl92zb {
-	100% {
-		transform: rotate(1turn);
-	}
-}
-</style>

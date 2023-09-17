@@ -1,31 +1,27 @@
 <template>
-	<ClientOnly>
-		<button
-			@click="resend"
-			style="direction: ltr"
-			:disabled="!showBotton"
-			class="btn btn-dark ms-auto"
-		>
-			<span v-if="showBotton" style="direction: rtl"
-				>ارسال دوباره
-				<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
-			</span>
+	<button class="btn btn-dark" @click="resend" :disabled="!showButton">
+		<div v-if="!showButton">
 			<vue-countdown
-				v-else
+				style="direction: ltr"
 				:time="2 * 60 * 1000"
-				v-slot="{ minutes, seconds }"
 				:transform="transformSlotProps"
+				v-slot="{ minutes, seconds }"
 				@end="onCountdownEnd"
 			>
-				{{ minutes }} : {{ seconds }}
+				{{ minutes }}:{{ seconds }}
 			</vue-countdown>
-		</button>
-	</ClientOnly>
+		</div>
+		<span v-else>
+			ارسال دوباره
+			<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
+		</span>
+	</button>
 </template>
 <script setup>
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import { useToast } from "vue-toastification";
-const showBotton = ref(false);
+
+const showButton = ref(false);
 const loading = ref(false);
 const toast = useToast();
 
@@ -36,11 +32,16 @@ async function resend() {
 			method: "POST",
 		});
 		toast.success("کد تایید ارسال شد");
-		showBotton.value = false;
+		showButton.value = false;
 	} catch (error) {
+		console.log(error.data.data.message);
 	} finally {
 		loading.value = false;
 	}
+}
+
+function onCountdownEnd() {
+	showButton.value = true;
 }
 
 function transformSlotProps(props) {
@@ -51,8 +52,5 @@ function transformSlotProps(props) {
 	});
 
 	return formattedProps;
-}
-function onCountdownEnd() {
-	showBotton.value = true;
 }
 </script>

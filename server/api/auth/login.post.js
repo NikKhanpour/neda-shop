@@ -11,10 +11,10 @@ export default defineEventHandler(async (event) => {
         })
         setCookie(event, 'login_token', data.data.login_token, {
             httpOnly: true,
-            maxAge: 60 * 60 * 24 * 7,
+            maxAge: 60 * 60 * 1,
             path: '/'
         })
-        return 'successfully'
+        return 'success'
     } catch (error) {
         return error
     }

@@ -5,9 +5,9 @@
 			<header class="header_section">
 				<div class="container">
 					<nav class="navbar navbar-expand-lg custom_nav-container">
-						<NuxtLink class="navbar-brand" to="/">
+						<a class="navbar-brand" href="index.html">
 							<span> webprog.io </span>
-						</NuxtLink>
+						</a>
 
 						<button
 							class="navbar-toggler"
@@ -23,41 +23,36 @@
 
 						<div class="collapse navbar-collapse" id="navbarSupportedContent">
 							<ul class="navbar-nav mx-auto">
-								<li class="nav-item" :class="{ active: $route.path == '/' }">
+								<li class="nav-item" :class="{ active: route.path == '/' }">
 									<NuxtLink class="nav-link" to="/">صفحه اصلی</NuxtLink>
 								</li>
-								<li
-									class="nav-item"
-									:class="{ active: $route.path == '/menu' }"
-								>
+								<li class="nav-item" :class="{ active: route.path == '/menu' }">
 									<NuxtLink class="nav-link" to="/menu">منو</NuxtLink>
 								</li>
 								<li
 									class="nav-item"
-									:class="{ active: $route.path == '/about-us' }"
+									:class="{ active: route.path == '/aboutus' }"
 								>
-									<NuxtLink class="nav-link" to="/about-us">درباره ما</NuxtLink>
+									<NuxtLink class="nav-link" to="/aboutus">درباره ما</NuxtLink>
 								</li>
 								<li
 									class="nav-item"
-									:class="{ active: $route.path == '/contact-us' }"
+									:class="{ active: route.path == '/contactus' }"
 								>
-									<NuxtLink class="nav-link" to="/contact-us"
-										>تماس با ما</NuxtLink
+									<NuxtLink class="nav-link" to="/contactus"
+										>تماس باما</NuxtLink
 									>
 								</li>
 							</ul>
 							<div class="user_option">
 								<NuxtLink class="cart_link position-relative" to="/cart">
 									<i class="bi bi-cart-fill text-white fs-5"></i>
-									<ClientOnly>
-										<span
-											v-if="cartItemsCounter > 0"
-											class="position-absolute top-0 translate-middle badge rounded-pill"
-										>
-											{{ cartItemsCounter }}
-										</span>
-									</ClientOnly>
+									<span
+										v-if="cart.itemsCount > 0"
+										class="position-absolute top-0 translate-middle badge rounded-pill"
+									>
+										{{ cart.itemsCount }}
+									</span>
 								</NuxtLink>
 								<NuxtLink v-if="authUser" to="/profile" class="btn-auth">
 									پروفایل
@@ -73,8 +68,9 @@
 	</div>
 </template>
 <script setup>
-import { useCartStore } from "../../store/cart";
-const cart = useCartStore();
-const cartItemsCounter = computed(() => cart.count);
+import { cartStore } from "../../store/cart";
+
+const route = useRoute();
 const { authUser } = useAuth();
+const cart = cartStore();
 </script>

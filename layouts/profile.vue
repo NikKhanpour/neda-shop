@@ -8,16 +8,16 @@
 							<NuxtLink to="/profile">اطلاعات کاربر</NuxtLink>
 						</li>
 						<li class="list-group-item">
-							<NuxtLink href="/profile/addresses">آدرس ها</NuxtLink>
+							<NuxtLink to="/profile/addresses">آدرس ها</NuxtLink>
 						</li>
 						<li class="list-group-item">
 							<NuxtLink to="/profile/orders">سفارشات</NuxtLink>
 						</li>
 						<li class="list-group-item">
-							<NuxtLink to="/profile/transactions">تراکنش ها</NuxtLink>
+							<NuxtLink href="/profile/transactions">تراکنش ها</NuxtLink>
 						</li>
 						<li class="list-group-item">
-							<a @click="logout" href="#">خروج</a>
+							<div @click="logout">خروج</div>
 						</li>
 					</ul>
 				</div>
@@ -30,14 +30,19 @@
 </template>
 <script setup>
 import { useToast } from "vue-toastification";
+
 const { authUser } = useAuth();
 const toast = useToast();
 async function logout() {
-	await $fetch("/api/auth/logout", {
-		method: "POST",
-	});
-	toast.warning("از سیستم خارج شدید");
-	authUser.value = null;
-	return navigateTo("/");
+	try {
+		await $fetch("/api/profile/logout", {
+			method: "POST",
+		});
+		toast.warning("از حساب خود خارج شدید");
+		authUser.value = null;
+		return navigateTo("/");
+	} catch (error) {
+		console.log(error.data.data.message).flat();
+	}
 }
 </script>

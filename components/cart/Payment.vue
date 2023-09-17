@@ -1,31 +1,27 @@
 <template>
-	<button
-		@click="payment"
-		:disabled="loading"
-		class="user_option btn-auth mt-4"
-	>
+	<button @click="pay" :disabled="loading" class="user_option btn-auth mt-4">
 		پرداخت
 		<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
 	</button>
 </template>
 <script setup>
 import { useToast } from "vue-toastification";
-const props = defineProps(["cart", "coupon", "addressId"]);
+
+const props = defineProps(["addressId", "coupon", "cart"]);
 const loading = ref(false);
 const toast = useToast();
 
-async function payment() {
+async function pay() {
 	try {
 		loading.value = true;
-		const data = await $fetch("/api/payment/send", {
+		const data = await $fetch("/api/order/pay", {
 			method: "POST",
 			body: {
 				cart: props.cart,
-				coupon: props.coupon.code,
+				coupon: props.coupon,
 				address_id: props.addressId,
 			},
 		});
-		console.log(data);
 		await navigateTo(data.url, {
 			external: true,
 		});

@@ -4,60 +4,45 @@
 			<div class="heading_container">
 				<h2>تماس با ما</h2>
 			</div>
-			<div class="row align-items-center">
+			<div class="row">
 				<div class="col-md-6">
 					<div class="form_container">
-						<div
-							v-if="errors.length > 0"
-							class="alert alert-danger"
-							role="alert"
-						>
-							<ul class="mb-0">
-								<li v-for="(error, index) in errors" :key="index">
-									{{ error }}
-								</li>
-							</ul>
-						</div>
 						<form @submit.prevent="send">
 							<div>
-								<label for="name" class="form-label">نام و نام خانوادگی</label>
 								<input
-									v-model="formData.name"
 									type="text"
 									class="form-control"
-									id="name"
+									placeholder="نام و نام خانوادگی"
+									v-model="formData.name"
 								/>
 							</div>
 							<div>
-								<label for="email" class="form-label">ایمیل</label>
 								<input
-									v-model="formData.email"
 									type="email"
 									class="form-control"
-									id="email"
+									placeholder="ایمیل"
+									v-model="formData.email"
 								/>
 							</div>
 							<div>
-								<label for="subject" class="form-label">موضوع پیام</label>
 								<input
-									v-model="formData.subject"
 									type="text"
 									class="form-control"
-									id="subject"
+									placeholder="موضوع پیام"
+									v-model="formData.subject"
 								/>
 							</div>
 							<div>
-								<label for="text" class="form-label">متن پیام</label>
 								<textarea
-									v-model="formData.text"
 									rows="10"
 									style="height: 100px"
 									class="form-control"
-									id="text"
+									placeholder="متن پیام"
+									v-model="formData.text"
 								></textarea>
 							</div>
 							<div class="btn_box">
-								<button :disabled="loading" type="submit">
+								<button :disabled="loading">
 									ارسال پیام
 									<div
 										v-if="loading"
@@ -68,8 +53,8 @@
 						</form>
 					</div>
 				</div>
-				<div class="col-md-6 mb-5">
-					<div class="map_container mb-5">
+				<div class="col-md-6">
+					<div class="map_container">
 						<div id="map" style="height: 345px"></div>
 					</div>
 				</div>
@@ -77,23 +62,21 @@
 		</div>
 	</section>
 </template>
-
 <script setup>
 import { useToast } from "vue-toastification";
+
+const toast = useToast();
+const loading = ref(false);
+const { $leaflet } = useNuxtApp();
 const {
 	public: { apiBase },
 } = useRuntimeConfig();
-const loading = ref(false);
-const errors = ref([]);
-const toast = useToast();
-const { $leaflet } = useNuxtApp();
 const formData = reactive({
 	name: "",
 	email: "",
 	subject: "",
 	text: "",
 });
-
 async function send() {
 	if (
 		formData.name === "" ||
@@ -101,24 +84,22 @@ async function send() {
 		formData.subject === "" ||
 		formData.text === ""
 	) {
-		toast.error("تمامی فیلدهای فرم تماس اجباری است");
+		toast.error("تمامی فیلدها الزامیست");
 		return;
 	}
 	try {
 		loading.value = true;
-		errors.value = [];
 		const data = await $fetch(`${apiBase}/contact-us`, {
 			method: "POST",
 			body: formData,
 		});
-		toast.success("پیام ارسال شد");
+		toast.success("پیام شما ارسال شد");
 	} catch (error) {
-		errors.value = Object.values(error.data.message).flat();
+		console.log(error);
 	} finally {
 		loading.value = false;
 	}
 }
-
 onMounted(() => {
 	let map = $leaflet.map("map").setView([35.700105, 51.400394], 14);
 	let tiles = $leaflet

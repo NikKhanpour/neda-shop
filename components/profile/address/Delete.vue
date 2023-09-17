@@ -1,26 +1,27 @@
 <template>
-	<div :disabled="loading" @click="deleteAddress" class="btn btn-dark">
+	<button :disabled="loading" @click="deleteAddress" class="btn btn-dark">
 		حذف
 		<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
-	</div>
+	</button>
 </template>
 <script setup>
 import { useToast } from "vue-toastification";
-const toast = useToast();
+
 const loading = ref(false);
 const props = defineProps(["addressId"]);
-const refreshGetAddress = inject("refreshGetAddress");
+const toast = useToast();
+const refresh = inject("refresh");
 async function deleteAddress() {
 	try {
-		loading.value = false;
-		await $fetch("/api/profile/addresses/delete", {
+		loading.value = true;
+		await $fetch("/api/profile/address/delete", {
 			method: "POST",
 			body: { address_id: props.addressId },
 		});
-		refreshGetAddress();
+		refresh();
 		toast.warning("آدرس حذف شد");
 	} catch (error) {
-		return error;
+		toast.error(Object.values(error.data.data.message).flat().toString());
 	} finally {
 		loading.value = false;
 	}

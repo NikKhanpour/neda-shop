@@ -1,16 +1,7 @@
 <template>
-	<section class="auth_section book_section">
-		<div class="container">
-			<div class="row mt-5">
-				<AuthCheckOtp v-if="showCheckOtp" />
-				<AuthLogin v-else @show-check-otp-form="() => (showCheckOtp = true)" />
-			</div>
-		</div>
-	</section>
+	<AuthCheckOtp v-if="showOtp" />
+	<AuthLogin v-else @showOtpForm="() => (showOtp = true)" />
 </template>
 <script setup>
-const showCheckOtp = ref(false);
-definePageMeta({
-	middleware: "logged-in",
-});
+const showOtp = ref(false);
 </script>

@@ -1,5 +1,13 @@
 <template>
 	<ClientOnly>
+		<template #fallback>
+			<div
+				class="d-flex justify-content-center"
+				style="margin-top: 200px; margin-bottom: 200px"
+			>
+				<div class="spinner-border" style="width: 5rem; height: 5rem"></div>
+			</div>
+		</template>
 		<section class="auth_section">
 			<div class="container">
 				<div class="row mt-5">
@@ -14,7 +22,7 @@
 							</div>
 							<div class="card-body">
 								<div class="text-center mb-5">
-									<template v-if="payment.status">
+									<div v-if="payment.status">
 										<i class="bi bi-check-circle-fill text-success fs-1"></i>
 										<h5 class="mt-3 text-success">
 											پرداخت شما با موفقیت انجام شد
@@ -22,18 +30,16 @@
 										<h6 class="mt-3">
 											شماره پیگیری : <span>{{ payment.transId }}</span>
 										</h6>
-									</template>
-									<template v-else>
+									</div>
+									<div v-else>
 										<i class="bi bi-x-circle-fill text-danger fs-1"></i>
-										<h5 class="mt-3 text-danger">
-											{{ payment.error }}
-										</h5>
-									</template>
+										<h5 class="mt-3 text-danger">{{ payment.error }}</h5>
+									</div>
 								</div>
 								<div class="d-flex justify-content-between">
 									<NuxtLink
 										v-if="payment.status"
-										to="/profile/orders"
+										to="/profile/transactions"
 										class="btn btn-primary"
 										>مشاهده سفارش</NuxtLink
 									>
@@ -50,42 +56,30 @@
 				</div>
 			</div>
 		</section>
-		<template #fallback>
-			<div class="cart-loadnig">
-				<div
-					class="spinner-border spinner-border-sm ms-2 cart-spiner my-5"
-					style="width: 5rem; height: 5rem"
-				></div>
-			</div>
-		</template>
 	</ClientOnly>
 </template>
 <script setup>
-import { useCartStore } from "../../store/cart";
-const cart = useCartStore();
+import { cartStore } from "../../store/cart";
+
 const route = useRoute();
-const errors = ref([]);
-const payment = ref(null);
 const {
 	public: { apiBase },
 } = useRuntimeConfig();
+const payment = ref({});
+const errors = ref([]);
+const cart = cartStore();
 if (process.client) {
 	try {
 		const data = await $fetch(`${apiBase}/payment/verify`, {
 			method: "POST",
-			body: {
-				token: route.query.trackId,
-				status: route.query.success,
-			},
+			body: { token: route.query.trackId, status: route.query.success },
 		});
 		payment.value = data.data;
 		if (payment.value.status) {
 			cart.clear();
 		}
 	} catch (error) {
-		errors.value = Object.values(error.data.message.error).flat();
+		errors.value = Object.values(error.data.message).flat();
 	}
 }
 </script>
-
-

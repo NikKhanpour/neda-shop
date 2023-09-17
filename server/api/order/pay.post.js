@@ -1,9 +1,9 @@
 export default defineEventHandler(async (event) => {
     const { public: { apiBase } } = useRuntimeConfig()
+    const body = await readBody(event)
     const token = getCookie(event, 'token')
-    const body = await readBody(event);
     try {
-        const data = await $fetch(`${apiBase}/profile/addresses/create`, {
+        const data = await $fetch(`${apiBase}/payment/send`, {
             method: 'POST',
             body,
             headers: {

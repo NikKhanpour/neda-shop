@@ -1,52 +1,77 @@
 <template>
-	<div class="col-md-4 offset-md-4">
-		<div class="card">
-			<div class="card-body">
-				<div class="form_container">
-					<form @submit.prevent="login">
-						<div class="mb-3">
-							<label for="cellphone" class="form-label">شماره موبایل</label>
-							<input v-model="cellphone" type="text" class="form-control" id="cellphone" />
+	<section class="auth_section book_section">
+		<div class="container">
+			<div class="row mt-5">
+				<div class="col-md-4 offset-md-4">
+					<div class="card">
+						<div v-if="errors.length > 0" class="alert alert-danger">
+							<ul class="mb-0">
+								<li v-for="(error, index) in errors" :key="index">
+									{{ error }}
+								</li>
+							</ul>
 						</div>
-						<button :disabled="loading" type="submit" class="btn btn-primary btn-auth">
-							ورود
-							<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
-						</button>
-					</form>
+						<div class="card-body">
+							<div class="form_container">
+								<form>
+									<div class="mb-3">
+										<label for="cellphone" class="form-label"
+											>شماره موبایل</label
+										>
+										<input
+											v-model="cellphone"
+											type="text"
+											class="form-control"
+											id="cellphone"
+										/>
+									</div>
+									<button
+										:disabled="loading"
+										@click="login"
+										type="submit"
+										class="btn btn-primary btn-auth"
+									>
+										ورود
+										<div
+											v-if="loading"
+											class="spinner-border spinner-border-sm ms-2"
+										></div>
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 </template>
 <script setup>
 import { useToast } from "vue-toastification";
-const toast = useToast();
-const emit = defineEmits(["showCheckOtpForm"]);
-const loading = ref(false);
-const cellphone = ref(null);
-async function login() {
-	if (cellphone.value === null) {
-		toast.error("شماره موبایل الزامی است");
-		return;
-	}
-	const pattern = /^(\+98|0)?9\d{9}$/;
-	if (!pattern.test(cellphone.value)) {
-		toast.error("فرمت شماره موبایل معتبر نیست");
-		return;
-	}
 
+const cellphone = ref(null);
+const loading = ref(false);
+const errors = ref([]);
+const toast = useToast();
+const emit = defineEmits(["showOtpForm"]);
+async function login() {
+	if (cellphone.value === "" || cellphone.value === null) {
+		toast.error("شماره خود را وارد کنید");
+		return;
+	}
 	try {
-		loading.value = true
-		const data = await $fetch("/api/auth/login", {
+		loading.value = true;
+		errors.value = [];
+		await $fetch("/api/auth/login", {
 			method: "POST",
 			body: { cellphone: cellphone.value },
 		});
 		toast.success("کد تایید ارسال شد");
-		emit("showCheckOtpForm");
+		emit("showOtpForm");
 	} catch (error) {
-		return error;
+		errors.value = Object.values(error.data.data.message).flat();
 	} finally {
-		loading.value = false
+		loading.value = false;
 	}
 }
 </script>
