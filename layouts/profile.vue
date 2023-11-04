@@ -14,7 +14,7 @@
 							<NuxtLink to="/profile/orders">سفارشات</NuxtLink>
 						</li>
 						<li class="list-group-item">
-							<NuxtLink href="/profile/transactions">تراکنش ها</NuxtLink>
+							<NuxtLink to="/profile/transactions">تراکنش ها</NuxtLink>
 						</li>
 						<li class="list-group-item">
 							<div @click="logout">خروج</div>
@@ -31,18 +31,19 @@
 <script setup>
 import { useToast } from "vue-toastification";
 
-const { authUser } = useAuth();
 const toast = useToast();
+const { authUser } = useAuth();
 async function logout() {
 	try {
-		await $fetch("/api/profile/logout", {
+		await $fetch("/api/auth/logout", {
 			method: "POST",
+			headers: useRequestHeaders(["cookie"]),
 		});
-		toast.warning("از حساب خود خارج شدید");
+		toast.warning("از اکانتت خارج شدی :(");
 		authUser.value = null;
 		return navigateTo("/");
 	} catch (error) {
-		console.log(error.data.data.message).flat();
+		console.log(error.data.data.message);
 	}
 }
 </script>

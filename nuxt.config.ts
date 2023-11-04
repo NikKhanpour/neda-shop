@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     }
   },
   build: {
-    transpile: ['vue-toastification']
+    transpile: ['vue-toastification', 'Vue3Toasity']
   },
   app: {
     head: {

@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="col-md-4 footer-col">
 					<div class="footer_contact">
-						<h4>تماس با ما</h4>
+						<h4>تماس با من</h4>
 						<div class="contact_link_box">
 							<a href="">
 								<i class="bi bi-geo-alt-fill"></i>
@@ -25,7 +25,7 @@
 				</div>
 				<div class="col-md-4 footer-col">
 					<div class="footer_detail">
-						<a href="" class="footer-logo"> webprog.io </a>
+						<a href="" class="footer-logo"> NeedElf.com </a>
 						<p>
 							لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
 							استفاده از طراحان گرافیک است.

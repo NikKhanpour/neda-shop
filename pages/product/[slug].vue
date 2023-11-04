@@ -6,37 +6,44 @@
 					<div class="row gy-5">
 						<div class="col-sm-12 col-lg-6">
 							<h3 class="fw-bold mb-4">{{ product.data.name }}</h3>
-							<h5 class="mb-3">
-								<div v-if="product.data.is_sale">
-									<del>{{ product.data.price }}</del>
-									{{ product.data.sale_price }} تومان
-									<div class="text-danger fs-6">
-										{{
-											salePercent(product.data.price, product.data.sale_price)
-										}}% تخفیف
-									</div>
+							<h5 v-if="product.data.is_sale" class="mb-3">
+								<del class="me-3">{{ numberFormat(product.data.price) }}</del>
+								{{ numberFormat(product.data.sale_price) }} تومان
+								<div class="text-danger fs-6">
+									{{
+										salePercent(product.data.price, product.data.sale_price)
+									}}% تخفیف
 								</div>
-								<div v-else>{{ numberFormat(product.data.price) }}تومان</div>
+							</h5>
+							<h5 v-else class="mb-3">
+								{{ numberFormat(product.data.price) }} تومان
 							</h5>
 							<p>
 								{{ product.data.description }}
 							</p>
 
-							<div class="mt-5 d-flex">
-								<button class="btn-add" @click="addToCart(product.data)">
-									افزودن به سبد خرید
-								</button>
-								<div class="input-counter ms-4">
-									<span
-										class="plus-btn"
-										@click="quantity <= product.data.quantity && quantity++"
-									>
-										+
-									</span>
-									<div class="input-number">{{ quantity }}</div>
-									<span class="minus-btn" @click="quantity > 1 && quantity--">
-										-
-									</span>
+							<div v-if="product.data.quantity > 0">
+								<div class="mt-5 d-flex">
+									<button @click="addToCart(product.data)" class="btn-add">
+										افزودن به سبد خرید
+									</button>
+									<div class="input-counter ms-4">
+										<span
+											@click="() => qty < product.data.quantity && qty++"
+											class="plus-btn"
+										>
+											+
+										</span>
+										<div class="input-number">{{ qty }}</div>
+										<span @click="() => qty > 1 && qty--" class="minus-btn">
+											-
+										</span>
+									</div>
+								</div>
+							</div>
+							<div v-else>
+								<div class="mt-5 d-flex text-danger">
+									موجودی این آیتم تموم شده :,(
 								</div>
 							</div>
 						</div>
@@ -67,12 +74,12 @@
 									<div class="carousel-item active">
 										<img
 											src="/images/preloader.png"
-											class="d-block w-100"
 											v-img="product.data.primary_image"
+											class="d-block w-100"
 										/>
 									</div>
 									<div
-										v-for="image in product.data.images"
+										v-for="image in product?.data.images"
 										:key="image.id"
 										class="carousel-item"
 									>
@@ -120,11 +127,11 @@
 		<div class="container">
 			<div class="row gx-3">
 				<div
-					v-for="product in randomProducts.data"
-					:key="product.id"
+					v-for="randomProduct in randomProducts?.data"
+					:key="randomProduct.id"
 					class="col-sm-6 col-lg-3"
 				>
-					<ProductCard :product="product" />
+					<ProductCard :product="randomProduct" />
 				</div>
 			</div>
 		</div>
@@ -137,12 +144,12 @@ const {
 	public: { apiBase },
 } = useRuntimeConfig();
 const route = useRoute();
-const quantity = ref(1);
 const cart = cartStore();
+const qty = ref(1);
 
 function addToCart(product) {
 	cart.remove(product.id);
-	cart.addToCart(product, quantity.value);
+	cart.addToCart(product, qty.value);
 }
 
 const { data: product } = await useFetch(

@@ -1,13 +1,13 @@
 <template>
 	<div
 		v-if="pending"
-		class="d-flex justify-content-center align-items-center"
-		style="margin-top: 200px; margin-bottom: 150px"
+		class="d-flex justify-content-center"
+		style="margin-top: 150px; margin-bottom: 400px"
 	>
-		<div class="spinner-border" style="width: 5rem; height: 5rem"></div>
+		<div class="spinner-border" style="height: 5rem; width: 5rem"></div>
 	</div>
 	<template v-else>
-		<div class="table-responsive">
+		<div class="table-responsive mt-3">
 			<table class="table align-middle">
 				<thead>
 					<tr>
@@ -20,7 +20,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="trans in data.transactions" :key="trans.id">
-						<th>{{ trans.id }}</th>
+						<th>{{ trans.order_id }}</th>
 						<td>{{ numberFormat(trans.amount) }} تومان</td>
 						<td>
 							<span
@@ -45,7 +45,7 @@
 					class="page-item"
 					:class="{ active: link.active }"
 				>
-					<button @click="paginate(link.label)" class="page-link">
+					<button @click="paginate(link.label)" class="page-link" href="#">
 						{{ link.label }}
 					</button>
 				</li>
@@ -55,16 +55,12 @@
 </template>
 <script setup>
 const page = ref(1);
-const { data, refresh, pending } = await useFetch(
-	() => "/api/profile/transactions",
-	{
-		headers: useRequestHeaders(["cookie"]),
-		query: { page },
-	}
-);
+const { data, refresh, pending } = await useFetch("/api/profile/transactions", {
+	headers: useRequestHeaders(["cookie"]),
+	query: { page },
+});
 
-function paginate(page) {
-	page.value = page;
-	refresh();
+function paginate(link) {
+	(page.value = link), refresh();
 }
 </script>

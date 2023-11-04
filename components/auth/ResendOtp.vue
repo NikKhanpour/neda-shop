@@ -1,47 +1,43 @@
 <template>
-	<button class="btn btn-dark" @click="resend" :disabled="!showButton">
-		<div v-if="!showButton">
-			<vue-countdown
-				style="direction: ltr"
-				:time="2 * 60 * 1000"
-				:transform="transformSlotProps"
-				v-slot="{ minutes, seconds }"
-				@end="onCountdownEnd"
-			>
-				{{ minutes }}:{{ seconds }}
-			</vue-countdown>
-		</div>
-		<span v-else>
-			ارسال دوباره
+	<button @click="resendOtp" :disabled="!resendPermission" class="btn btn-dark">
+		<span v-if="resendPermission"
+			>ارسال دوباره
 			<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
 		</span>
+		<div v-else style="direction: ltr" class="justify-content-between">
+			<vue-countdown
+				:time="60 * 2 * 1000"
+				v-slot="{ minutes, seconds }"
+				:transform="transformSlotProps"
+				@end="() => (resendPermission = true)"
+			>
+				{{ minutes }} : {{ seconds }}
+			</vue-countdown>
+		</div>
 	</button>
 </template>
 <script setup>
 import VueCountdown from "@chenfengyuan/vue-countdown";
 import { useToast } from "vue-toastification";
 
-const showButton = ref(false);
-const loading = ref(false);
 const toast = useToast();
+const loading = ref(false);
+const resendPermission = ref(false);
 
-async function resend() {
+async function resendOtp() {
 	try {
 		loading.value = true;
 		await $fetch("/api/auth/resendOtp", {
 			method: "POST",
+			headers: useRequestHeaders(["cookie"]),
 		});
-		toast.success("کد تایید ارسال شد");
-		showButton.value = false;
+		toast.success("دوباره برات فرستادم");
+		resendPermission.value = false;
 	} catch (error) {
-		console.log(error.data.data.message);
+		toast.error(Object.values(error.data.data.message).flat().toString());
 	} finally {
 		loading.value = false;
 	}
-}
-
-function onCountdownEnd() {
-	showButton.value = true;
 }
 
 function transformSlotProps(props) {

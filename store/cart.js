@@ -8,44 +8,44 @@ export const cartStore = defineStore('cartStore', {
         }
     },
     getters: {
-        itemsCount(state) {
+        count(state) {
             return state.cart.length
         },
         items(state) {
             return state.cart
         },
-        totalAmount(state) {
+        total(state) {
             return state.cart.reduce((total, product) => {
                 return product.is_sale ? total + (product.sale_price * product.qty) : total + (product.price * product.qty)
             }, 0)
-        },
+        }
     },
     actions: {
         addToCart(product, qty) {
+            if (product.quantity == 0) {
+                toast.error('آیتم موجود نیست :,(')
+                return
+            }
             this.cart.push({ ...product, qty })
-            toast.success('آیتم به سبد خرید اضافه شد')
+            toast.success('انداختی تو سبد خریدت :>')
         },
         remove(id) {
-            this.cart = this.cart.filter(p => p.id != id)
-        },
-        clear() {
-            this.cart = []
+            this.cart = this.cart.filter(item => item.id != id)
         },
         increment(id) {
             const item = this.cart.find(p => p.id == id)
-            if (item) {
-                if (item.qty <= item.quantity) {
-                    item.qty++
-                }
+            if (item.qty < item.quantity) {
+                item.qty++
             }
         },
         decrement(id) {
             const item = this.cart.find(p => p.id == id)
-            if (item) {
-                if (item.qty > 1) {
-                    item.qty--
-                }
+            if (item.qty > 1) {
+                item.qty--
             }
+        },
+        clear() {
+            this.cart = []
         }
     },
     persist: {

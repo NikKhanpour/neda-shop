@@ -1,5 +1,9 @@
 <template>
-	<button @click="pay" :disabled="loading" class="user_option btn-auth mt-4">
+	<button
+		@click="payment"
+		:disabled="loading"
+		class="user_option btn-auth mt-4"
+	>
 		پرداخت
 		<div v-if="loading" class="spinner-border spinner-border-sm ms-2"></div>
 	</button>
@@ -7,14 +11,15 @@
 <script setup>
 import { useToast } from "vue-toastification";
 
-const props = defineProps(["addressId", "coupon", "cart"]);
-const loading = ref(false);
 const toast = useToast();
 
-async function pay() {
+const props = defineProps(["cart", "coupon", "addressId"]);
+
+const loading = ref(false);
+async function payment() {
 	try {
 		loading.value = true;
-		const data = await $fetch("/api/order/pay", {
+		const data = await $fetch("/api/payment", {
 			method: "POST",
 			body: {
 				cart: props.cart,
@@ -22,11 +27,19 @@ async function pay() {
 				address_id: props.addressId,
 			},
 		});
-		await navigateTo(data.url, {
+		return navigateTo(data.url, {
 			external: true,
 		});
 	} catch (error) {
-		toast.error(Object.values(error.data.data.message).flat().toString());
+		if (
+			Object.values(error.data.data.message).flat().toString() ==
+			"فیلد شناسه آدرس الزامی است"
+		) {
+			toast.error("آدرس انتخاب نکردی...");
+		} else {
+			toast.error(Object.values(error.data.data.message).flat().toString());
+			// console.log(error.data.data.message);
+		}
 	} finally {
 		loading.value = false;
 	}

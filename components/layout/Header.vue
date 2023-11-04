@@ -1,12 +1,11 @@
 <template>
 	<div class="sub_page">
 		<div class="hero_area">
-			<!-- header section strats -->
 			<header class="header_section">
 				<div class="container">
 					<nav class="navbar navbar-expand-lg custom_nav-container">
 						<a class="navbar-brand" href="index.html">
-							<span> webprog.io </span>
+							<span> نداشاپ </span>
 						</a>
 
 						<button
@@ -31,28 +30,30 @@
 								</li>
 								<li
 									class="nav-item"
-									:class="{ active: route.path == '/aboutus' }"
+									:class="{ active: route.path == '/aboutme' }"
 								>
-									<NuxtLink class="nav-link" to="/aboutus">درباره ما</NuxtLink>
+									<NuxtLink class="nav-link" to="/aboutme">درباره من</NuxtLink>
 								</li>
 								<li
 									class="nav-item"
-									:class="{ active: route.path == '/contactus' }"
+									:class="{ active: route.path == '/contactme' }"
 								>
-									<NuxtLink class="nav-link" to="/contactus"
-										>تماس باما</NuxtLink
+									<NuxtLink class="nav-link" to="/contactme"
+										>تماس با من</NuxtLink
 									>
 								</li>
 							</ul>
 							<div class="user_option">
 								<NuxtLink class="cart_link position-relative" to="/cart">
 									<i class="bi bi-cart-fill text-white fs-5"></i>
-									<span
-										v-if="cart.itemsCount > 0"
-										class="position-absolute top-0 translate-middle badge rounded-pill"
-									>
-										{{ cart.itemsCount }}
-									</span>
+									<ClientOnly>
+										<span
+											v-if="itemsCounter > 0"
+											class="position-absolute top-0 translate-middle badge rounded-pill"
+										>
+											{{ itemsCounter }}
+										</span>
+									</ClientOnly>
 								</NuxtLink>
 								<NuxtLink v-if="authUser" to="/profile" class="btn-auth">
 									پروفایل
@@ -63,7 +64,6 @@
 					</nav>
 				</div>
 			</header>
-			<!-- end header section -->
 		</div>
 	</div>
 </template>
@@ -71,6 +71,7 @@
 import { cartStore } from "../../store/cart";
 
 const route = useRoute();
-const { authUser } = useAuth();
 const cart = cartStore();
+const { authUser } = useAuth();
+const itemsCounter = computed(() => cart.count);
 </script>

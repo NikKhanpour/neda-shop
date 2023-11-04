@@ -4,15 +4,14 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     try {
         const data = await $fetch(`${apiBase}/profile/transactions`, {
-            method: 'GET',
             query,
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
-            },
+            }
         })
         return data.data
     } catch (error) {
         return error
     }
-}) 
+})

@@ -1,7 +1,7 @@
 <template>
 	<div class="box">
 		<div>
-			<NuxtLink :to="`/product/${props.product.slug}`">
+			<NuxtLink :to="`/product/${product.slug}`">
 				<div class="img-box">
 					<img
 						src="/images/preloader.png"
@@ -10,25 +10,29 @@
 				</div>
 			</NuxtLink>
 			<div class="detail-box">
-				<NuxtLink :to="`/product/${props.product.slug}`"
-					><h5>{{ props.product.name }}</h5>
+				<NuxtLink :to="`/product/${product.slug}`">
+					<h5>{{ props.product.name }}</h5>
 					<p>
 						{{ props.product.description }}
 					</p>
 				</NuxtLink>
 				<div class="options">
-					<h6>
-						<div v-if="props.product.is_sale">
-							<del>{{ numberFormat(props.product.price) }}</del>
-							<span class="text-danger"
-								>{{ numberFormat(props.product.sale_price) }} تومان</span
-							>
-						</div>
-						<div v-else>{{ numberFormat(props.product.price) }} تومان</div>
+					<h6 v-if="props.product.is_sale">
+						<del class="me-2">{{ numberFormat(props.product.price) }}</del>
+						{{ numberFormat(props.product.sale_price) }}
+						<span>تومان</span>
 					</h6>
-					<button @click="addToCart(props.product)">
-						<i class="bi bi-cart-fill text-white fs-5"></i>
+					<h6 v-else>
+						{{ numberFormat(props.product.price) }}
+						<span>تومان</span>
+					</h6>
+					<button v-if="props.product.quantity > 0">
+						<i
+							@click="addToCart(props.product)"
+							class="bi bi-cart-fill text-white fs-5"
+						></i>
 					</button>
+					<div v-else class="text-danger">تموم شده</div>
 				</div>
 			</div>
 		</div>

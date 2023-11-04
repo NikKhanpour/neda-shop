@@ -1,7 +1,7 @@
 <template>
 	<section class="slider_section">
 		<div class="bg-box">
-			<img src="/images/hero-bg.jpg" alt="" />
+			<img src="/images/neda.png" alt="" />
 		</div>
 		<div id="customCarousel1" class="carousel slide" data-bs-ride="carousel">
 			<div class="carousel-inner">
@@ -11,13 +11,7 @@
 							<div class="col-md-7 col-lg-6">
 								<div class="detail-box">
 									<h2 class="mb-3 fw-bold">لورم ایپسوم متن ساختگی</h2>
-									<p>
-										لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و
-										با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه
-										و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی
-										تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
-										کاربردی می باشد.
-									</p>
+									<p></p>
 									<div class="btn-box">
 										<a href="" class="btn1"> سفارش </a>
 									</div>
@@ -32,13 +26,7 @@
 							<div class="col-md-7 col-lg-6">
 								<div class="detail-box">
 									<h2 class="mb-3 fw-bold">لورم ایپسوم متن ساختگی</h2>
-									<p>
-										لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و
-										با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه
-										و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی
-										تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
-										کاربردی می باشد.
-									</p>
+									<p></p>
 									<div class="btn-box">
 										<a href="" class="btn1"> سفارش </a>
 									</div>
@@ -53,13 +41,7 @@
 							<div class="col-md-7 col-lg-6">
 								<div class="detail-box">
 									<h2 class="mb-3 fw-bold">لورم ایپسوم متن ساختگی</h2>
-									<p>
-										لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و
-										با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه
-										و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی
-										تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
-										کاربردی می باشد.
-									</p>
+									<p></p>
 									<div class="btn-box">
 										<a href="" class="btn1"> سفارش </a>
 									</div>
@@ -70,7 +52,7 @@
 				</div>
 			</div>
 			<div class="container">
-				<ul class="carousel-indicators">
+				<ol class="carousel-indicators">
 					<li
 						data-bs-target="#customCarousel1"
 						data-bs-slide-to="0"
@@ -78,7 +60,7 @@
 					></li>
 					<li data-bs-target="#customCarousel1" data-bs-slide-to="1"></li>
 					<li data-bs-target="#customCarousel1" data-bs-slide-to="2"></li>
-				</ul>
+				</ol>
 			</div>
 		</div>
 	</section>

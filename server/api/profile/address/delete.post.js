@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
-    const { public: { apiBase } } = useRuntimeConfig()
+    const { public: { apiBase } } = useRuntimeConfig();
     const token = getCookie(event, 'token')
-    const body = await readBody(event)
+    const body = await readBody(event);
     try {
         const data = await $fetch(`${apiBase}/profile/addresses/delete`, {
             method: 'POST',
@@ -13,6 +13,6 @@ export default defineEventHandler(async (event) => {
         })
         return 'success'
     } catch (error) {
-        return error
+        return error;
     }
 })
